@@ -11,18 +11,35 @@
 #import "DetailsViewController.h"
 
 
-@interface MovieViewController ()<UITableViewDataSource, UITableViewDelegate>
+@interface MovieViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
+
+
+
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) NSArray *movies;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (nonatomic, strong) UIAlertController *alertController;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) NSArray *data;
+@property (strong, nonatomic) NSArray *filteredData;
+
+@property (weak, nonatomic) IBOutlet UIView *searchBarPlaceholder;
+
+@property (nonatomic, strong) NSArray *devices;
+@property (strong, nonatomic) NSMutableArray *filteredDevices;
+@property BOOL isFiltered;
 
 @end
 
 @implementation MovieViewController
 
 - (void)viewDidLoad {
+    
+    self.isFiltered = false;
+    self.searchBar.delegate = self;
+    
     [super viewDidLoad];
     
     self.tableView.dataSource = self;
@@ -31,6 +48,15 @@
     self.refreshControl =[[UIRefreshControl alloc]init];
     [self.refreshControl addTarget:self action:@selector(fechMovies) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
+    
+    self.filteredData = self.movies;
+    
+    self.devices = @[@"Iphone", @"Ipad"];
+    
+    //[self.searchControllerNavi.searchBar sizeToFit];
+    //searchBarPlaceholder.addSubview(searchController.searchBar)
+    //automaticallyAdjustsScrollViewInsets = false
+    //definesPresentationContext = true
 }
     
 - (void) fechMovies{
@@ -58,6 +84,8 @@
        }];
     [task resume];
     [self.activityIndicator stopAnimating];
+    
+    
 }
 
 - (void)showError{
@@ -111,6 +139,44 @@
     
     return cell;
 }
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    
+    if (searchText.length == 0) {
+        self.isFiltered = false;
+    } else {
+        self.isFiltered = true;
+        self.filteredDevices = [[NSMutableArray alloc] init];
+
+        
+        for(NSString *device in self.devices) {
+            NSRange nameRange = [device rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            if (nameRange.location != NSNotFound) {
+                [self.filteredDevices addObject:device];
+            }
+        }
+        [self.tableView reloadData];
+    }
+    
+    //if (searchText.length != 0) {
+        
+        //NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *evaluatedObject, NSDictionary *bindings) {
+            //return [evaluatedObject containsString:searchText];
+        //}];
+        //self.filteredData = [self.movies filteredArrayUsingPredicate:predicate];
+        
+        //NSLog(@"%@", self.filteredData);
+        
+    //}
+    //else {
+        //self.filteredData = self.movies;
+    //}
+    
+
+    //[self.tableView reloadData];
+ 
+}
+
 
 //[NSString stringWithFormat:@"row: %d, section %d", indexPath.row, indexPath.section];
 #pragma mark - Navigation
