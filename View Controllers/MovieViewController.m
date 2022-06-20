@@ -39,8 +39,12 @@
     
     self.isFiltered = false;
     self.searchBar.delegate = self;
-    
     [super viewDidLoad];
+    //self.devices = self.movies[@"title"];
+    
+    
+    
+    //[self.devices addObjectsFromArray:self.movies];
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -49,14 +53,17 @@
     [self.refreshControl addTarget:self action:@selector(fechMovies) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
     
-    self.filteredData = self.movies;
+    self.data = @[@"Fantastic Beasts: The Secrets of Dumbledor", @"Sonic the Hedgehog 2", @"The Lost City", @"Jurastic World Dominion",
+                      @"Morbius", @"Phoenix, AZ", @"San Diego, CA", @"San Antonio, TX",
+                      @"Dallas, TX", @"Memory", @"The Unbearable Weight of Massive Talent", @"The Northman",
+                      @"Dragon Ball Super: Super Hero", @"Interceptor", @"Hustle", @"See For Me",
+                      @"The Bad Guys", @"Lightyear", @"Charlotte, ND", @"Fort Worth, TX"];
+
+    self.devices = @[@"Iphone", @"Fan", @"Son"];
+    self.filteredData = self.devices;
     
-    self.devices = @[@"Iphone", @"Ipad"];
-    
-    //[self.searchControllerNavi.searchBar sizeToFit];
-    //searchBarPlaceholder.addSubview(searchController.searchBar)
-    //automaticallyAdjustsScrollViewInsets = false
-    //definesPresentationContext = true
+    //self.devices = @[@"Iphone", @"Ipad"];//
+
 }
     
 - (void) fechMovies{
@@ -84,7 +91,6 @@
        }];
     [task resume];
     [self.activityIndicator stopAnimating];
-    
     
 }
 
@@ -116,8 +122,12 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:
     (NSInteger)section{
+    if (self.isFiltered) {
+        return self.filteredDevices.count;
+    }
     return self.movies.count;
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:
     (NSIndexPath *)indexPath{
@@ -127,6 +137,7 @@
     NSDictionary *movie = self.movies[indexPath.row];
     cell.titleLabel.text = movie[@"title"];
     cell.synopsisLabel.text = movie[@"overview"];
+    
     
     NSString *baseURLString =@"https://image.tmdb.org/t/p/w500";
     NSString *posterURLString = movie[@"poster_path"];
@@ -144,36 +155,19 @@
     
     if (searchText.length == 0) {
         self.isFiltered = false;
+        [self.searchBar endEditing:YES];
     } else {
         self.isFiltered = true;
-        self.filteredDevices = [[NSMutableArray alloc] init];
-
-        
-        for(NSString *device in self.devices) {
-            NSRange nameRange = [device rangeOfString:searchText options:NSCaseInsensitiveSearch];
-            if (nameRange.location != NSNotFound) {
+        self.filteredDevices = [[NSMutableArray alloc]init];
+        self.filteredData = self.devices;
+     for (NSString *device in self.devices) {
+            NSRange range = [device rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            if (range.location != NSNotFound) {
                 [self.filteredDevices addObject:device];
             }
         }
-        [self.tableView reloadData];
     }
-    
-    //if (searchText.length != 0) {
-        
-        //NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *evaluatedObject, NSDictionary *bindings) {
-            //return [evaluatedObject containsString:searchText];
-        //}];
-        //self.filteredData = [self.movies filteredArrayUsingPredicate:predicate];
-        
-        //NSLog(@"%@", self.filteredData);
-        
-    //}
-    //else {
-        //self.filteredData = self.movies;
-    //}
-    
-
-    //[self.tableView reloadData];
+    [self.tableView reloadData];
  
 }
 
