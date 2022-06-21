@@ -46,7 +46,7 @@ Here's a walkthrough of implemented user stories:
 <img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
-/private/var/folders/qt/bq6glxq52dn88cv_8ls65r140000gn/T/0ec1cdfc7b4d30c2356e4dae20b38bb1/Kapture 2022-06-20 at 00.43.30.gif
+https://media.giphy.com/media/JoU08K3b2iIaUq0Mjc/giphy.gif
 
 ## Notes
 
