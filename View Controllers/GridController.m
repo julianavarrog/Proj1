@@ -4,6 +4,7 @@
 //
 //  Created by Julia Navarro Goldaraz on 6/17/22.
 //
+
 #import "GridController.h"
 #import "ColorCell.h"
 #import "UIImageView+AFNetworking.h"
@@ -13,11 +14,9 @@
 @property (strong, nonatomic) IBOutlet UICollectionView *GridCollector;
 @property (nonatomic, strong) NSArray *movies;
 
-
 @end
 
 @implementation GridController
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -35,12 +34,10 @@
     if (posterURLString != nil){
         NSString *fullPosterURLString = [baseURLString stringByAppendingString: posterURLString];
         NSURL *posterURL = [NSURL URLWithString: fullPosterURLString];
-        //cell.posterView.image = nil;
         [cell.imageLabel setImageWithURL : posterURL];
     }
     return cell;
 }
-
 
 - (void)showError{
     
@@ -50,24 +47,23 @@
                                      preferredStyle:UIAlertControllerStyleAlert];
 
         //Add Buttons
-
         UIAlertAction* yesButton = [UIAlertAction
                                     actionWithTitle:@"Try Again"
                                     style:UIAlertActionStyleDefault
                                     handler:^(UIAlertAction * action) {
                                     //Handle your yes please button action here
-            [self fechMovies];
+                                        [self fechMovies];
                                     }];
+    
         //Add your buttons to alert controller
-
         [alert addAction:yesButton];
 
         [self presentViewController:alert animated:YES completion:nil];
 }
+
 - (void) fechMovies{
         
     // Do any additional setup after loading the view.
-
     NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=0a89e900f2558e433154e66bbbd47da0"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
@@ -99,23 +95,10 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    
-    
-    
-    //int totalwidth = self.collectionView.bounds.size.width;
     int totalwidth = self.view.frame.size.width-15;
     int numberOfCellsPerRow = 3;
     int dimensions = (CGFloat)(totalwidth / numberOfCellsPerRow);
     return CGSizeMake(dimensions, 190);
-     
-     //int oddEven = indexPath.row / numberOfCellsPerRow % 2;
-    
-    //if (oddEven == 0) {
-    //    return CGSizeMake(dimensions, dimensions);
-    //} else {
-        //return CGSizeMake(dimensions, dimensions / 2);
-    //}
 }
 
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -134,13 +117,12 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *cellIndexPath = [self.GridCollector indexPathForCell:sender];
-    //NSIndexPath *cellIndexPath = [self.collectionView cellForItemAtIndexPath:sender];
     NSDictionary *movieInfo = self.movies[cellIndexPath.row];
-    DetailsViewController *detailsVC = [segue destinationViewController];
-    detailsVC.detailsDict = movieInfo;
     
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    DetailsViewController *detailsVC = [segue destinationViewController];
+    detailsVC.detailsDict = movieInfo;
 }
 
 @end
