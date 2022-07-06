@@ -10,14 +10,13 @@
 @implementation MovieCell
 
 - (void)awakeFromNib {
-    [super awakeFromNib];
     // Initialization code
+    [super awakeFromNib];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+     // Configure the view for the selected state
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 @end
